@@ -5,6 +5,7 @@
 
 *Classe de teste simples que efetua algumas operações básicas*
 
+{{{
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -129,3 +130,4 @@ namespace Neutrine.iHercules.Tests
         }
     }
 }
+}}
