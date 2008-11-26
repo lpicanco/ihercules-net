@@ -25,15 +25,12 @@ namespace Neutrine.iHercules.Tests
 
         public XmlConnectionTest()
         {
+            // Cria uma nova conexão.
+            // Se o arquivo não existir. Um novo é criado.
             conn = new XmlConnection("c:/temp/XmlConnectionTest.xml");
         }
 
         private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
         public TestContext TestContext
         {
             get
@@ -46,34 +43,15 @@ namespace Neutrine.iHercules.Tests
             }
         }
 
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
         [TestMethod]
         public void TestSave()
         {
+            conn.DeleteAll();
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 0);
+
             conn.Save(CreateClient());
 
-            Assert.IsTrue(conn.FindAll(typeof(Client)).Count > 0);
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 1);
         }
 
         [TestMethod]
@@ -81,18 +59,21 @@ namespace Neutrine.iHercules.Tests
         {
             var clients = new List<object>();
 
-            int max = 50000;
+            // Instanciação dos clientes.
+            int max = 10000;
+            conn.DeleteAll();
+
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 0);
 
             for (int i = 0; i < max; i++)
             {
                 clients.Add(CreateClient());
             }
 
+            // Salva a lista.
             conn.SaveList(clients);
 
-            Assert.IsTrue(conn.FindAll(typeof(Client)).Count >= max);
-            Assert.IsTrue(conn.FindAll(typeof(Client)).Count >= max);
-            Assert.IsTrue(conn.FindAll(typeof(Client)).Count >= max);
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == max);
         }
 
 
@@ -108,6 +89,7 @@ namespace Neutrine.iHercules.Tests
         [TestMethod]
         public void TestFindAllExample()
         {
+            conn.DeleteAll();
             Client client = CreateClientRandomId();
             conn.Save(client);
 
