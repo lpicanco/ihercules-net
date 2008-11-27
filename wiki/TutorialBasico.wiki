@@ -97,6 +97,20 @@ namespace Neutrine.iHercules.Tests
 
             Assert.IsTrue(conn.FindAll(client).Count == 1);
         }
+        
+        [TestMethod]
+        public void TestDelete()
+        {
+            conn.DeleteAll();
+
+            Client c = CreateClientRandomId();
+            conn.Save(c);
+
+            Assert.AreEqual(1, conn.FindAll(c).Count);
+
+            conn.Delete(c);
+            Assert.AreEqual(0, conn.FindAll(c).Count);
+        }
 
         [TestMethod]
         public void TestDeleteAll()
