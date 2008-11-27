@@ -1,7 +1,5 @@
 #labels Featured,Phase-Implementation
-= Tutorial básico =
-
-*Classe de teste simples que efetua algumas operações básicas*
+=Classe de teste simples que efetua algumas operações básicas=
 
 {{{
 using System;
