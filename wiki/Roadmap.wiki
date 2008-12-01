@@ -1,7 +1,5 @@
 #labels Featured,Phase-Requirements,roadmap
-= Roadmap =
-
-Roadmap para a versão 1.0
+= Roadmap para a versão 1.0 =
 
   * Suporte a transações ACID
   * Servidor
