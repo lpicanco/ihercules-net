@@ -1,0 +1,137 @@
+# Classe de teste simples que efetua algumas operações básicas #
+
+```
+using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Neutrine.iHercules.Connection;
+using Neutrine.iHercules.Tests.Entities;
+
+namespace Neutrine.iHercules.Tests
+{
+    /// <summary>
+    /// Teste da classe XmlConnection
+    /// </summary>
+    [TestClass]
+    public class XmlConnectionTest
+    {
+        private static int id;
+        private XmlConnection conn;
+
+        public XmlConnectionTest()
+        {
+            // Cria uma nova conexão.
+            // Se o arquivo não existir. Um novo é criado.
+            conn = new XmlConnection("c:/temp/XmlConnectionTest.xml");
+        }
+
+        private TestContext testContextInstance;
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
+        [TestMethod]
+        public void TestSave()
+        {
+            conn.DeleteAll();
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 0);
+
+            conn.Save(CreateClient());
+
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 1);
+        }
+
+        [TestMethod]
+        public void TestSaveList()
+        {
+            var clients = new List<object>();
+
+            // Instanciação dos clientes.
+            int max = 10000;
+            conn.DeleteAll();
+
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 0);
+
+            for (int i = 0; i < max; i++)
+            {
+                clients.Add(CreateClient());
+            }
+
+            // Salva a lista.
+            conn.SaveList(clients);
+
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == max);
+        }
+
+
+        [TestMethod]
+        public void TestFindAll()
+        {
+            Client client = CreateClient();
+            conn.Save(client);
+
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count > 0);
+        }
+
+        [TestMethod]
+        public void TestFindAllExample()
+        {
+            conn.DeleteAll();
+            Client client = CreateClientRandomId();
+            conn.Save(client);
+
+            client.Name = "";
+
+            Assert.IsTrue(conn.FindAll(client).Count == 1);
+        }
+        
+        [TestMethod]
+        public void TestDelete()
+        {
+            conn.DeleteAll();
+
+            Client c = CreateClientRandomId();
+            conn.Save(c);
+
+            Assert.AreEqual(1, conn.FindAll(c).Count);
+
+            conn.Delete(c);
+            Assert.AreEqual(0, conn.FindAll(c).Count);
+        }
+
+        [TestMethod]
+        public void TestDeleteAll()
+        {
+            Client client = CreateClient();
+            
+            conn.Save(client);
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count > 0);
+
+            conn.DeleteAll();
+            Assert.IsTrue(conn.FindAll(typeof(Client)).Count == 0);
+        }
+
+        private Client CreateClient()
+        {
+            return new Client() { Id = ++id, Name = "Luiz" };
+        }
+
+        private Client CreateClientRandomId()
+        {
+            int id = DateTime.Now.Millisecond;
+            return new Client() { Id = id, Name = "Luiz"};
+        }
+    }
+}
+
+```
